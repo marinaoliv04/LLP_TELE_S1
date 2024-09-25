@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PRODUCTS 100
+#define MAX_DESCRIPTION 50
+
+typedef struct {
+    int code;
+    char description[MAX_DESCRIPTION];
+    float unitPrice;
+    int quantity;
+} Product;
+
+Product products[MAX_PRODUCTS];
+int numProducts = 0;
+
+void displayMenu() {
+    printf("Menu:\n");
+    printf("1. Cadastrar Produto\n");
+    printf("2. Consultar Produto para Alteração\n");
+    printf("3. Listar todos os produtos\n");
+    printf("4. Exclusão do Produto\n");
+    printf("Opção: ");
+}
+
+void addProduct() {
+    if (numProducts < MAX_PRODUCTS) {
+        printf("Cadastrar Produto:\n");
+        printf("Código: ");
+        scanf("%d", &products[numProducts].code);
+        printf("Descrição: ");
+        scanf("%s", products[numProducts].description);
+        printf("Valor unitário: ");
+        scanf("%f", &products[numProducts].unitPrice);
+        printf("Quantidade em estoque: ");
+        scanf("%d", &products[numProducts].quantity);
+        numProducts++;
+        printf("Produto cadastrado com sucesso!\n");
+    } else {
+        printf("Erro: Limite de produtos alcançado.\n");
+    }
+}
+
+void updateProduct() {
+    int code;
+    printf("Consultar Produto para Alteração:\n");
+    printf("Código do produto: ");
+    scanf("%d", &code);
+    for (int i = 0; i < numProducts; i++) {
+        if (products[i].code == code) {
+            printf("Descrição: ");
+            scanf("%s", products[i].description);
+            printf("Valor unitário: ");
+            scanf("%f", &products[i].unitPrice);
+            printf("Quantidade em estoque: ");
+            scanf("%d", &products[i].quantity);
+            printf("Produto alterado com sucesso!\n");
+            return;
+        }
+    }
+    printf("Erro: Produto não encontrado.\n");
+}
+
+void listProducts() {
+    printf("Listar todos os produtos:\n");
+    for (int i = 0; i < numProducts; i++) {
+        float stockValue = products[i].quantity * products[i].unitPrice;
+        printf("Código: %d\n", products[i].code);
+        printf("Descrição: %s\n", products[i].description);
+        printf("Valor unitário: %.2f\n", products[i].unitPrice);
+        printf("Quantidade em estoque: %d\n", products[i].quantity);
+        printf("Valor do estoque: %.2f\n", stockValue);
+        printf("\n");
+    }
+}
+
+void deleteProduct() {
+    int code;
+    printf("Exclusão do Produto:\n");
+    printf("Código do produto: ");
+    scanf("%d", &code);
+    for (int i = 0; i < numProducts; i++) {
+        if (products[i].code == code) {
+            char confirm;
+            printf("Tem certeza que deseja excluir o produto? (s/n): ");
+            scanf(" %c", &confirm);
+            if (confirm == 's') {
+                for (int j = i; j < numProducts - 1; j++) {
+                    products[j] = products[j + 1];
+                }
+                numProducts--;
+                printf("Produto excluído com sucesso!\n");
+            } else {
+                printf("Exclusão cancelada.\n");
+            }
+            return;
+        }
+    }
+    printf("Erro: Produto não encontrado.\n");
+}
+
+int main() {
+    int option;
+    do {
+        displayMenu();
+        scanf("%d", &option);
+        switch (option) {
+            case 1:
+                addProduct();
+                break;
+            case 2:
+                updateProduct();
+                break;
+            case 3:
+                listProducts();
+                break;
+            case 4:
+                deleteProduct();
+                break;
+            default:
+                printf("Opção inválida.\n");
+        }
+    } while (option != 0);
+    return 0;
+}
